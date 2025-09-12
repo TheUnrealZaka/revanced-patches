@@ -1,56 +1,54 @@
 package app.revanced.patches.music.misc.discordrpc
 
-import app.revanced.patcher.fingerprint.MethodFingerprint
+import app.revanced.util.fingerprint.legacyFingerprint
+import app.revanced.util.or
 import com.android.tools.smali.dexlib2.AccessFlags
 import com.android.tools.smali.dexlib2.Opcode
 
-internal object PlayerStateChangeFingerprint : MethodFingerprint(
+internal val musicPlaybackControlsFingerprint = legacyFingerprint(
+    name = "musicPlaybackControlsDiscordRpc",
     returnType = "V",
-    accessFlags = AccessFlags.PUBLIC.value,
+    accessFlags = AccessFlags.PUBLIC or AccessFlags.FINAL,
     parameters = listOf("Z"),
     opcodes = listOf(
         Opcode.IPUT_BOOLEAN,
-        Opcode.IGET_OBJECT,
-        Opcode.IF_EQZ
+        Opcode.INVOKE_VIRTUAL,
+        Opcode.RETURN_VOID
     ),
-    customFingerprint = { methodDef, _ ->
-        methodDef.name.contains("onPlaybackStateChanged") ||
-        methodDef.name.contains("setPlayWhenReady") ||
-        methodDef.name.contains("onPlayerStateChanged")
+    customFingerprint = { method, _ ->
+        method.definingClass.endsWith("/MusicPlaybackControls;")
     }
 )
 
-internal object TrackMetadataFingerprint : MethodFingerprint(
+internal val musicPlayerUpdateFingerprint = legacyFingerprint(
+    name = "musicPlayerUpdateFingerprint",
     returnType = "V",
-    accessFlags = AccessFlags.PUBLIC.value,
+    accessFlags = AccessFlags.PUBLIC or AccessFlags.FINAL,
+    parameters = listOf("L", "L"),
     opcodes = listOf(
-        Opcode.IPUT_OBJECT,
         Opcode.IGET_OBJECT,
-        Opcode.IF_EQZ
+        Opcode.IF_EQZ,
+        Opcode.INVOKE_VIRTUAL
     ),
-    customFingerprint = { methodDef, _ ->
-        methodDef.name.contains("onMetadataChanged") ||
-        methodDef.name.contains("updateMetadata") ||
-        methodDef.name.contains("setMediaMetadata")
+    strings = listOf("w_st"),
+    customFingerprint = { method, _ ->
+        method.name == "a" && method.definingClass.contains("Player")
     }
 )
 
-internal object MusicPlayerFingerprint : MethodFingerprint(
+internal val mediaMetadataFingerprint = legacyFingerprint(
+    name = "mediaMetadataFingerprint", 
     returnType = "V",
-    accessFlags = AccessFlags.PUBLIC.value,
-    customFingerprint = { methodDef, classDef ->
-        classDef.sourceFile?.contains("MusicPlayer") == true ||
-        classDef.type.contains("MusicPlayer") ||
-        methodDef.name.contains("updateNowPlaying")
-    }
-)
-
-internal object MediaSessionCallbackFingerprint : MethodFingerprint(
-    returnType = "V",
-    accessFlags = AccessFlags.PUBLIC.value,
-    parameters = listOf("Landroid/support/v4/media/MediaMetadataCompat;"),
-    customFingerprint = { methodDef, _ ->
-        methodDef.name.contains("onMetadataChanged") ||
-        methodDef.name.contains("updateMetadata")
+    accessFlags = AccessFlags.PUBLIC or AccessFlags.FINAL,
+    parameters = listOf("L"),
+    opcodes = listOf(
+        Opcode.CHECK_CAST,
+        Opcode.INVOKE_VIRTUAL,
+        Opcode.MOVE_RESULT_OBJECT
+    ),
+    customFingerprint = { method, classDef ->
+        method.parameterTypes.firstOrNull()?.contains("MediaMetadata") == true ||
+        classDef.type.contains("MediaSession") ||
+        method.name.contains("onMetadataChanged")
     }
 )

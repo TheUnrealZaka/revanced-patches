@@ -39,6 +39,73 @@ public class DiscordRpcPatch {
     }
     
     /**
+     * Called when metadata update is attempted - tries to extract info via reflection
+     */
+    public static void onMetadataUpdateAttempt(Object metadata) {
+        if (!Settings.DISCORD_RPC_ENABLED.get()) {
+            return;
+        }
+        
+        try {
+            if (metadata == null) return;
+            
+            // Try to extract metadata using reflection
+            String title = extractMetadataString(metadata, "title", "TITLE");
+            String artist = extractMetadataString(metadata, "artist", "ARTIST");  
+            String album = extractMetadataString(metadata, "album", "ALBUM");
+            
+            // Only update if we got some meaningful data
+            if (title != null && !title.trim().isEmpty()) {
+                onTrackMetadataChanged(title, artist, album);
+            }
+        } catch (Exception ex) {
+            Logger.printException(() -> "onMetadataUpdateAttempt failure", ex);
+        }
+    }
+    
+    /**
+     * Helper method to extract metadata strings via reflection
+     */
+    private static String extractMetadataString(Object metadata, String... keys) {
+        try {
+            Class<?> metadataClass = metadata.getClass();
+            
+            // Try different method names for getting string values
+            String[] methodNames = {
+                "getString", "get", "getCharSequence", "getText"
+            };
+            
+            for (String methodName : methodNames) {
+                try {
+                    java.lang.reflect.Method method = metadataClass.getMethod(methodName, String.class);
+                    
+                    for (String key : keys) {
+                        try {
+                            Object result = method.invoke(metadata, "android.media.metadata." + key);
+                            if (result != null) {
+                                return result.toString();
+                            }
+                            
+                            // Also try without prefix
+                            result = method.invoke(metadata, key.toLowerCase());
+                            if (result != null) {
+                                return result.toString();
+                            }
+                        } catch (Exception ignored) {
+                            // Try next key
+                        }
+                    }
+                } catch (Exception ignored) {
+                    // Try next method
+                }
+            }
+        } catch (Exception ignored) {
+            // Return null if extraction fails
+        }
+        return null;
+    }
+    
+    /**
      * Called when playback state changes
      */
     public static void onPlaybackStateChanged(boolean playing) {
@@ -109,7 +176,7 @@ public class DiscordRpcPatch {
             intent.putExtras(presenceData);
             
             context.sendBroadcast(intent);
-            Logger.printDebug(() -> "Discord RPC: Presence updated");
+            Logger.printDebug(() -> "Discord RPC: Presence updated - " + currentTitle);
             
         } catch (Exception ex) {
             Logger.printException(() -> "updateDiscordPresence failure", ex);
