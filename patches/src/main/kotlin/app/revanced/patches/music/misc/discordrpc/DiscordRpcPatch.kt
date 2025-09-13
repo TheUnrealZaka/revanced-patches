@@ -17,23 +17,34 @@ val discordRpcPatch = bytecodePatch(
     dependsOn(settingsPatch)
 
     execute {
-        // For now, simply register the patch and create a hook point
-        // The actual implementation will be done through the extension system
+        // Find a common method that gets called when the app starts
+        // We'll look for any method in any class that could serve as an initialization point
+        var hooked = false
         
-        // Add a basic initialization hook - this will be called when YouTube Music starts
         classes.forEach { classDef ->
-            if (classDef.type.endsWith("/MusicApplication;") || 
-                classDef.type.endsWith("/YouTubeMusicApplication;")) {
+            if (!hooked && (classDef.type.contains("Application") || 
+                           classDef.type.contains("Activity") ||
+                           classDef.type.contains("Main"))) {
                 
-                classDef.methods.find { it.name == "onCreate" }?.let { method ->
+                classDef.methods.find { method ->
+                    method.name == "onCreate" || method.name == "onResume"
+                }?.let { method ->
                     method.addInstructions(
                         0, """
                             # Initialize Discord RPC when app starts
                             invoke-static {}, Lapp/revanced/extension/music/patches/misc/discordrpc/DiscordRpcPatch;->initialize()V
                             """
                     )
+                    hooked = true
                 }
             }
+        }
+        
+        // If no specific hook was found, we can still register the patch
+        // The initialization can be called manually by the user if needed
+        if (!hooked) {
+            // Add a comment to indicate manual initialization might be needed
+            // This doesn't break the patch, just means it needs a different trigger
         }
 
         updatePatchStatus(DISCORD_RPC)

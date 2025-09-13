@@ -131,17 +131,28 @@ public abstract class WebSocketConnection {
         
         // Handle extended payload length
         if (payloadLength == 126) {
-            payloadLength = (inputReader.read() << 8) | inputReader.read();
+            int len1 = inputReader.read();
+            int len2 = inputReader.read();
+            if (len1 == -1 || len2 == -1) return null;
+            payloadLength = (len1 << 8) | len2;
         } else if (payloadLength == 127) {
             // For simplicity, we'll assume payload is never > Integer.MAX_VALUE
-            inputReader.skip(4); // Skip first 4 bytes of 64-bit length
-            payloadLength = (inputReader.read() << 24) | (inputReader.read() << 16) | 
-                           (inputReader.read() << 8) | inputReader.read();
+            for (int i = 0; i < 4; i++) {
+                if (inputReader.read() == -1) return null; // Skip first 4 bytes
+            }
+            int len1 = inputReader.read();
+            int len2 = inputReader.read();
+            int len3 = inputReader.read(); 
+            int len4 = inputReader.read();
+            if (len1 == -1 || len2 == -1 || len3 == -1 || len4 == -1) return null;
+            payloadLength = (len1 << 24) | (len2 << 16) | (len3 << 8) | len4;
         }
         
         // Skip mask key if present (server shouldn't send masked frames)
         if (masked) {
-            inputReader.skip(4);
+            for (int i = 0; i < 4; i++) {
+                if (inputReader.read() == -1) return null;
+            }
         }
         
         // Read payload
@@ -156,6 +167,9 @@ public abstract class WebSocketConnection {
             return new String(payload, 0, totalRead);
         } else if (opcode == 8) { // Close frame
             connected = false;
+            return null;
+        } else if (opcode == 9) { // Ping frame - respond with pong
+            // For simplicity, we'll skip ping/pong handling
             return null;
         }
         

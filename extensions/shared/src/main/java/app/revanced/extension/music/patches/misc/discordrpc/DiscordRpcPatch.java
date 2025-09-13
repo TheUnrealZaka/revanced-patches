@@ -49,13 +49,24 @@ public class DiscordRpcPatch {
             return;
         }
         
+        // Delay initialization to ensure context is available
+        Utils.runOnMainThreadDelayed(() -> initializeWithRetry(0), 2000);
+    }
+    
+    private static void initializeWithRetry(int attempt) {
         try {
             Context context = Utils.getContext();
             if (context == null) {
-                Logger.printDebug(() -> TAG + ": Context not available, retrying in 5 seconds");
-                Utils.runOnMainThreadDelayed(DiscordRpcPatch::initialize, 5000);
+                if (attempt < 5) {
+                    Logger.printDebug(() -> TAG + ": Context not available, retrying in 3 seconds (attempt " + (attempt + 1) + ")");
+                    Utils.runOnMainThreadDelayed(() -> initializeWithRetry(attempt + 1), 3000);
+                } else {
+                    Logger.printDebug(() -> TAG + ": Context not available after 5 attempts, giving up");
+                }
                 return;
             }
+            
+            String token = DISCORD_TOKEN.get();
             
             // Initialize Discord RPC manager
             rpcManager = new DiscordRpcManager(token);
@@ -68,6 +79,15 @@ public class DiscordRpcPatch {
         } catch (Exception e) {
             Logger.printException(() -> TAG + ": Error initializing Discord RPC", e);
         }
+    }
+    
+    /**
+     * Manual initialization method for fallback
+     */
+    public static void initializeManually() {
+        Logger.printDebug(() -> TAG + ": Manual initialization requested");
+        initialized = false; // Reset flag to allow re-initialization
+        initialize();
     }
     
     private static void setupMediaSessionMonitoring(Context context) {
@@ -108,7 +128,8 @@ public class DiscordRpcPatch {
             MediaController youtubeMediaController = null;
             for (MediaController controller : controllers) {
                 String packageName = controller.getPackageName();
-                if (packageName != null && (packageName.contains("youtube") || packageName.contains("music"))) {
+                if (packageName != null && packageName.equals(context.getPackageName())) {
+                    // This is YouTube Music itself
                     youtubeMediaController = controller;
                     break;
                 }
