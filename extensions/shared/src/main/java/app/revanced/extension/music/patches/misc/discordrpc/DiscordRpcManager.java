@@ -46,7 +46,7 @@ public class DiscordRpcManager {
                     @Override
                     public void onReady() {
                         Logger.printInfo(() -> TAG + ": Connected to Discord gateway");
-                        updatePresence();
+                        updatePresenceInternal();
                     }
                     
                     @Override
@@ -94,14 +94,10 @@ public class DiscordRpcManager {
         playbackState = state;
         
         // Update Discord presence
-        updatePresence();
+        updatePresenceInternal();
     }
     
-    private boolean equals(String a, String b) {
-        return (a == null && b == null) || (a != null && a.equals(b));
-    }
-    
-    private void updatePresence() {
+    private void updatePresenceInternal() {
         if (webSocketClient == null || !webSocketClient.isConnected()) {
             return;
         }
@@ -128,6 +124,14 @@ public class DiscordRpcManager {
                 Logger.printException(() -> TAG + ": Error updating presence", e);
             }
         });
+    }
+    
+    private void updatePresence() {
+        updatePresenceInternal();
+    }
+    
+    private boolean equals(String a, String b) {
+        return (a == null && b == null) || (a != null && a.equals(b));
     }
     
     private JSONObject buildPresence() throws JSONException {

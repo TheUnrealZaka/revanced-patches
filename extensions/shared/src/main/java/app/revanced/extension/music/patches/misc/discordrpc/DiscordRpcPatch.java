@@ -122,6 +122,9 @@ public class DiscordRpcPatch {
         try {
             if (mediaSessionManager == null || rpcManager == null) return;
             
+            Context context = Utils.getContext();
+            if (context == null) return;
+            
             // Get active media sessions
             List<MediaController> controllers = mediaSessionManager.getActiveSessions(null);
             
