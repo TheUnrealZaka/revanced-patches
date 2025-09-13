@@ -216,14 +216,6 @@ public class Settings extends BaseSettings {
     public static final BooleanSetting RYD_ESTIMATED_LIKE = new BooleanSetting("revanced_ryd_estimated_like", FALSE, true);
     public static final BooleanSetting RYD_TOAST_ON_CONNECTION_ERROR = new BooleanSetting("revanced_ryd_toast_on_connection_error", TRUE);
 
-    // PreferenceScreen: Discord RPC
-    public static final BooleanSetting DISCORD_RPC_ENABLED = new BooleanSetting("revanced_discord_rpc_enabled", FALSE);
-    public static final StringSetting DISCORD_TOKEN = new StringSetting("revanced_discord_token", "");
-    public static final BooleanSetting DISCORD_RPC_SHOW_ARTIST = new BooleanSetting("revanced_discord_rpc_show_artist", TRUE);
-    public static final BooleanSetting DISCORD_RPC_SHOW_ALBUM = new BooleanSetting("revanced_discord_rpc_show_album", TRUE);
-    public static final BooleanSetting DISCORD_RPC_SHOW_TIMESTAMPS = new BooleanSetting("revanced_discord_rpc_show_timestamps", TRUE);
-    public static final BooleanSetting DISCORD_RPC_HIDE_ON_PAUSE = new BooleanSetting("revanced_discord_rpc_hide_on_pause", FALSE);
-
     // PreferenceScreen: Return YouTube Username
     public static final BooleanSetting RETURN_YOUTUBE_USERNAME_ABOUT = new BooleanSetting("revanced_return_youtube_username_youtube_data_api_v3_about", FALSE, false);
 
@@ -296,7 +288,6 @@ public class Settings extends BaseSettings {
             CUSTOM_PLAYER_BACKGROUND_COLOR_PRIMARY.key,
             CUSTOM_PLAYER_BACKGROUND_COLOR_SECONDARY.key,
             DISABLE_MUSIC_VIDEO_IN_ALBUM_REDIRECT_TYPE.key,
-            DISCORD_TOKEN.key,
             ENABLE_CUSTOM_NAVIGATION_BAR_COLOR_VALUE.key,
             EXTERNAL_DOWNLOADER_PACKAGE_NAME.key,
             HIDE_ACCOUNT_MENU_FILTER_STRINGS.key,
