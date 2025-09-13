@@ -13,5 +13,6 @@ internal enum class CategoryType(val value: String, var added: Boolean) {
     RETURN_YOUTUBE_DISLIKE("ryd", false),
     RETURN_YOUTUBE_USERNAME("return_youtube_username", false),
     SPONSOR_BLOCK("sb", false),
-    MISC("misc", false)
+    MISC("misc", false),
+    DISCORD_RPC("discord_rpc", false)
 }

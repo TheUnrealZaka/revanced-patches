@@ -168,5 +168,9 @@ internal enum class PatchList(
     WATCH_HISTORY(
         "Watch history",
         "Adds an option to change the domain of the watch history or check its status."
+    ),
+    DISCORD_RPC(
+        "Discord RPC",
+        "Adds Discord Rich Presence support to show currently playing music with 'Listening to YouTube Music' status."
     )
 }
