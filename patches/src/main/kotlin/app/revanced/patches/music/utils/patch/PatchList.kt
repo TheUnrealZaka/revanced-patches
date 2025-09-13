@@ -65,10 +65,6 @@ internal enum class PatchList(
         "Disable QUIC protocol",
         "Adds an option to disable CronetEngine's QUIC protocol."
     ),
-    DISCORD_RPC(
-        "Discord RPC",
-        "Adds an option to show current playing music in Discord Rich Presence with song title, artist, and album information."
-    ),
     ENABLE_DEBUG_LOGGING(
         "Enable debug logging",
         "Adds an option for debugging."
