@@ -100,9 +100,11 @@ public class DiscordRpcManager {
      */
     private void updateActiveSession() {
         try {
-            // For this implementation, we'll monitor YouTube Music specifically
-            // by checking the package name
-            List<MediaController> controllers = mediaSessionManager.getActiveSessions(null);
+            // Note: In newer Android versions, we might need notification access permission
+            // to get active sessions. For this implementation, we'll try to get sessions
+            // but gracefully handle SecurityException
+            ComponentName component = new ComponentName(context, context.getClass());
+            List<MediaController> controllers = mediaSessionManager.getActiveSessions(component);
             MediaController ytMusicController = null;
             
             for (MediaController controller : controllers) {
@@ -127,6 +129,9 @@ public class DiscordRpcManager {
                     clearPresence();
                 }
             }
+        } catch (SecurityException e) {
+            Log.w(TAG, "No permission to access media sessions, using fallback approach");
+            // Fallback: we'll rely on the hook methods if they get called
         } catch (Exception e) {
             Log.e(TAG, "Error updating active session", e);
         }

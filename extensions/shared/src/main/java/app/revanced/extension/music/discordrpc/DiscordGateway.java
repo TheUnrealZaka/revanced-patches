@@ -72,6 +72,7 @@ public class DiscordGateway {
     
     /**
      * Set presence via Discord HTTP API
+     * Using custom status instead of activity for broader compatibility
      */
     private void setPresenceViaHttp(MusicMetadata metadata, boolean clear) throws Exception {
         URL url = new URL("https://discord.com/api/v10/users/@me/settings");
@@ -83,6 +84,8 @@ public class DiscordGateway {
             conn.setRequestProperty("Content-Type", "application/json");
             conn.setRequestProperty("User-Agent", USER_AGENT);
             conn.setDoOutput(true);
+            conn.setConnectTimeout(10000); // 10 seconds
+            conn.setReadTimeout(10000);    // 10 seconds
             
             JSONObject payload = new JSONObject();
             
@@ -94,29 +97,45 @@ public class DiscordGateway {
                 JSONObject customStatus = new JSONObject();
                 
                 String statusText = metadata.getDetails();
-                if (metadata.getState() != null) {
-                    statusText += " " + metadata.getState();
-                }
+                String stateInfo = metadata.getState();
                 
-                customStatus.put("text", statusText);
-                customStatus.put("emoji_id", JSONObject.NULL);
-                customStatus.put("emoji_name", "\uD83C\uDFB5"); // Musical note emoji
-                customStatus.put("expires_at", JSONObject.NULL);
+                if (statusText != null) {
+                    if (stateInfo != null) {
+                        statusText = statusText + " " + stateInfo;
+                    }
+                    
+                    // Limit status text length to Discord's limit (128 characters)
+                    if (statusText.length() > 128) {
+                        statusText = statusText.substring(0, 125) + "...";
+                    }
+                    
+                    customStatus.put("text", statusText);
+                    customStatus.put("emoji_id", JSONObject.NULL);
+                    customStatus.put("emoji_name", "\uD83C\uDFB5"); // Musical note emoji
+                    customStatus.put("expires_at", JSONObject.NULL);
+                } else {
+                    // Fallback to just showing "Listening to YouTube Music"
+                    customStatus.put("text", "Listening to YouTube Music");
+                    customStatus.put("emoji_id", JSONObject.NULL);
+                    customStatus.put("emoji_name", "\uD83C\uDFB5");
+                    customStatus.put("expires_at", JSONObject.NULL);
+                }
                 
                 payload.put("custom_status", customStatus);
             }
             
             try (OutputStream os = conn.getOutputStream()) {
                 os.write(payload.toString().getBytes("UTF-8"));
+                os.flush();
             }
             
             int responseCode = conn.getResponseCode();
             if (responseCode >= 200 && responseCode < 300) {
                 Log.d(TAG, "Presence updated successfully");
             } else {
-                Log.w(TAG, "Failed to update presence: " + responseCode);
+                Log.w(TAG, "Failed to update presence: HTTP " + responseCode);
                 
-                // Read error response
+                // Read error response for debugging
                 try (BufferedReader br = new BufferedReader(new InputStreamReader(
                         responseCode >= 400 ? conn.getErrorStream() : conn.getInputStream()))) {
                     StringBuilder response = new StringBuilder();
@@ -125,6 +144,8 @@ public class DiscordGateway {
                         response.append(line);
                     }
                     Log.w(TAG, "Response: " + response.toString());
+                } catch (Exception e) {
+                    Log.w(TAG, "Could not read error response", e);
                 }
             }
             

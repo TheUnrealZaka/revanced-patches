@@ -43,37 +43,45 @@ public class MusicMetadata {
     }
     
     /**
-     * Get the state string for Discord presence
+     * Get the state string for Discord presence based on user settings
      */
     public String getState() {
-        if (artist.isEmpty() && album.isEmpty()) {
+        // Check user preferences for what to show
+        boolean showArtist = app.revanced.extension.music.settings.Settings.DISCORD_RPC_SHOW_ARTIST.get();
+        boolean showAlbum = app.revanced.extension.music.settings.Settings.DISCORD_RPC_SHOW_ALBUM.get();
+        
+        if (!showArtist && !showAlbum) {
             return null;
         }
         
-        if (!artist.isEmpty() && !album.isEmpty()) {
+        if (showArtist && showAlbum && !artist.isEmpty() && !album.isEmpty()) {
             return "by " + artist + " • " + album;
-        } else if (!artist.isEmpty()) {
+        } else if (showArtist && !artist.isEmpty()) {
             return "by " + artist;
-        } else {
+        } else if (showAlbum && !album.isEmpty()) {
             return album;
+        } else {
+            return null;
         }
     }
     
     /**
-     * Get start timestamp for presence
+     * Get start timestamp for presence based on user settings
      */
     public Long getStartTimestamp() {
-        if (!isPlaying || position < 0) {
+        boolean showTimestamps = app.revanced.extension.music.settings.Settings.DISCORD_RPC_SHOW_TIMESTAMPS.get();
+        if (!showTimestamps || !isPlaying || position < 0) {
             return null;
         }
         return timestamp - position;
     }
     
     /**
-     * Get end timestamp for presence
+     * Get end timestamp for presence based on user settings
      */
     public Long getEndTimestamp() {
-        if (!isPlaying || duration <= 0 || position < 0) {
+        boolean showTimestamps = app.revanced.extension.music.settings.Settings.DISCORD_RPC_SHOW_TIMESTAMPS.get();
+        if (!showTimestamps || !isPlaying || duration <= 0 || position < 0) {
             return null;
         }
         long remaining = duration - position;
