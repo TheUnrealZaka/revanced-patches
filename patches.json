@@ -1094,6 +1094,28 @@
     "options": []
   },
   {
+    "name": "Discord RPC",
+    "description": "Adds Discord Rich Presence support to show currently playing music with \u0027Listening to YouTube Music\u0027 status.",
+    "use": true,
+    "dependencies": [
+      "Settings for YouTube Music"
+    ],
+    "compatiblePackages": {
+      "com.google.android.apps.youtube.music": [
+        "6.20.51",
+        "6.29.59",
+        "6.42.55",
+        "6.51.53",
+        "7.16.53",
+        "7.25.53",
+        "8.12.54",
+        "8.28.54",
+        "8.30.54"
+      ]
+    },
+    "options": []
+  },
+  {
     "name": "Enable debug logging",
     "description": "Adds an option for debugging.",
     "use": false,
@@ -1609,6 +1631,22 @@
     "description": "Adds options to hide ads.",
     "use": true,
     "dependencies": [
+      "Settings for Reddit"
+    ],
+    "compatiblePackages": {
+      "com.reddit.frontpage": [
+        "2024.17.0",
+        "2025.05.1",
+        "2025.12.1"
+      ]
+    },
+    "options": []
+  },
+  {
+    "name": "Hide ads",
+    "description": "Adds options to hide ads.",
+    "use": true,
+    "dependencies": [
       "Settings for YouTube Music",
       "BytecodePatch",
       "BytecodePatch",
@@ -1642,22 +1680,6 @@
         "values": null
       }
     ]
-  },
-  {
-    "name": "Hide ads",
-    "description": "Adds options to hide ads.",
-    "use": true,
-    "dependencies": [
-      "Settings for Reddit"
-    ],
-    "compatiblePackages": {
-      "com.reddit.frontpage": [
-        "2024.17.0",
-        "2025.05.1",
-        "2025.12.1"
-      ]
-    },
-    "options": []
   },
   {
     "name": "Hide ads",
@@ -2523,6 +2545,22 @@
     "description": "Adds an option to sanitize sharing links by removing tracking query parameters.",
     "use": true,
     "dependencies": [
+      "Settings for Reddit"
+    ],
+    "compatiblePackages": {
+      "com.reddit.frontpage": [
+        "2024.17.0",
+        "2025.05.1",
+        "2025.12.1"
+      ]
+    },
+    "options": []
+  },
+  {
+    "name": "Sanitize sharing links",
+    "description": "Adds an option to sanitize sharing links by removing tracking query parameters.",
+    "use": true,
+    "dependencies": [
       "BytecodePatch",
       "Settings for YouTube Music",
       "ResourcePatch"
@@ -2538,22 +2576,6 @@
         "8.12.54",
         "8.28.54",
         "8.30.54"
-      ]
-    },
-    "options": []
-  },
-  {
-    "name": "Sanitize sharing links",
-    "description": "Adds an option to sanitize sharing links by removing tracking query parameters.",
-    "use": true,
-    "dependencies": [
-      "Settings for Reddit"
-    ],
-    "compatiblePackages": {
-      "com.reddit.frontpage": [
-        "2024.17.0",
-        "2025.05.1",
-        "2025.12.1"
       ]
     },
     "options": []

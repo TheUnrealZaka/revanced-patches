@@ -101,6 +101,7 @@ See the [documentation](https://github.com/inotia00/revanced-documentation#readm
 | `Disable dislike redirection` | Adds an option to disable redirection to the next track when clicking the Dislike button. | 6.20.51 ~ 8.30.54 |
 | `Disable forced auto captions` | Adds an option to disable captions from being automatically enabled. | 6.20.51 ~ 8.30.54 |
 | `Disable music video in album` | Adds option to redirect music videos from albums for non-premium users. | 6.20.51 ~ 8.30.54 |
+| `Discord RPC` | Adds Discord Rich Presence support to show currently playing music with 'Listening to YouTube Music' status. | 6.20.51 ~ 8.30.54 |
 | `Enable debug logging` | Adds an option for debugging. | 6.20.51 ~ 8.30.54 |
 | `Enable landscape mode` | Adds an option to enable landscape mode when rotating the screen on phones. | 6.20.51 ~ 8.30.54 |
 | `Fix playback` | Adds options to fix playback issues. | 6.20.51 ~ 8.30.54 |
