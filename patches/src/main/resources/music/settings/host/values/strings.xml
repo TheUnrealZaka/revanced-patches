@@ -590,5 +590,30 @@ Tap the continue button and allow optimization changes."</string>
     <string name="revanced_app_info_summary">Click to check the app name, app version, patch version, and patched date.</string>
     <string name="revanced_app_info_dialog_title">App info</string>
     <string name="revanced_app_info_dialog_message">&lt;b>App name&lt;/b>&lt;br>&lt;small>%1$s&lt;/small>&lt;br>&lt;br>&lt;b>App version&lt;/b>&lt;br>&lt;small>%2$s&lt;/small>&lt;br>&lt;br>&lt;b>ReVanced Patches&lt;/b>&lt;br>&lt;small>%3$s&lt;/small>&lt;br>&lt;br>&lt;b>Patched date&lt;/b>&lt;br>&lt;small>%4$s&lt;/small></string>
+
+    <!-- PreferenceScreen: Discord RPC -->
+    <string name="revanced_preference_screen_discord_rpc_title">Discord RPC</string>
+
+    <string name="revanced_discord_rpc_enabled_title">Enable Discord RPC</string>
+    <string name="revanced_discord_rpc_enabled_summary">Shows your currently playing music on Discord with "Listening to YouTube Music" status.</string>
+    <string name="revanced_discord_token_title">Discord Token</string>
+    <string name="revanced_discord_token_summary">Enter your Discord user token to enable Rich Presence. This is NOT a bot token.</string>
+    <string name="revanced_discord_token_hint">Your Discord user token...</string>
+    <string name="revanced_discord_rpc_instructions_title">How to get Discord token</string>
+    <string name="revanced_discord_rpc_instructions_summary">Tap here for instructions on how to get your Discord user token safely.</string>
+    <string name="revanced_discord_rpc_about_title">About Discord RPC</string>
+    <string name="revanced_discord_rpc_about_summary">Shows track name, artist, album, and playback duration on Discord. Only shows when music is playing.</string>
+    <string name="revanced_discord_rpc_show_when_paused_title">Show when paused</string>
+    <string name="revanced_discord_rpc_show_when_paused_summary">Continue showing Discord presence even when music is paused.</string>
+    <string name="revanced_discord_rpc_initialize_title">Initialize Discord RPC</string>
+    <string name="revanced_discord_rpc_initialize_summary">Manually initialize Discord RPC if automatic initialization fails.</string>
+    
+    <string name="revanced_discord_rpc_instructions_dialog_title">Getting Your Discord Token</string>
+    <string name="revanced_discord_rpc_instructions_dialog_message">&lt;b>Desktop:&lt;/b>&lt;br>1. Open Discord in browser (discord.com/app)&lt;br>2. Press F12 to open Developer Tools&lt;br>3. Go to Application tab&lt;br>4. Go to Local Storage → discord.com&lt;br>5. Find "token" and copy the value&lt;br>&lt;br>&lt;b>Mobile:&lt;/b>&lt;br>1. Install Firefox browser&lt;br>2. Go to discord.com/app&lt;br>3. Press F12 (or enable developer mode)&lt;br>4. Follow same steps as desktop&lt;br>&lt;br>&lt;b>Warning:&lt;/b> Never share your token with anyone!</string>
+    
+    <string name="revanced_discord_rpc_initialization_success">Discord RPC initialized successfully</string>
+    <string name="revanced_discord_rpc_initialization_failed">Discord RPC initialization failed. Check your token and try again.</string>
+    <string name="revanced_discord_rpc_token_invalid">Invalid Discord token. Please check and try again.</string>
+    <string name="revanced_discord_rpc_permission_required">Notification access permission required for media monitoring.</string>
 </resources>
 

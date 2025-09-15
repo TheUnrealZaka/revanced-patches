@@ -142,6 +142,10 @@ public final class app/revanced/patches/music/misc/debugging/DebuggingPatchKt {
 	public static final fun getDebuggingPatch ()Lapp/revanced/patcher/patch/ResourcePatch;
 }
 
+public final class app/revanced/patches/music/misc/discordrpc/DiscordRpcPatchKt {
+	public static final fun getDiscordRpcPatch ()Lapp/revanced/patcher/patch/BytecodePatch;
+}
+
 public final class app/revanced/patches/music/misc/drc/DrcAudioPatchKt {
 	public static final fun getDrcAudioPatch ()Lapp/revanced/patcher/patch/BytecodePatch;
 }
